@@ -1,0 +1,43 @@
+installed.packages("ggplot2")
+require(ggplot2)
+install.packages("forecast")
+require(forecast)
+install.packages("fpp2")
+require(fpp2)
+########Netflix
+net<-read.csv("C://Users//USUARIO//Desktop//netflix.csv")
+netts<-ts(net,start = 2018,frequency = 286)
+plot(netts)
+#####media
+meanf(netts,20)
+media<-meanf(netts,20)
+plot(media)
+### metodo ingenuo
+naive(netts,20)
+ingenuo<-naive(netts, 20)
+plot(ingenuo)
+##### metodo del ingenuo estacional
+snaive(netts,20)
+ingestacional<-snaive(netts,20)
+plot(ingestacional)
+
+#### metodo a la deriva
+rwf(netts,20,drift = TRUE)
+deri<- rwf(netts,20,drift = TRUE)
+plot(deri)
+###
+cerveza2<-window(ausbeer,start=1992, end=2007)
+cerveza2
+#grafica algunos pronosticos
+autoplot(cerveza2) +
+ autolayer(meanf(cerveza2,h=11),series = "media",PI=FALSE)+  
+ autolayer(naive(cerveza2,h=11),series = "ingenuo",PI=FALSE)+  
+ ggtitle("pronosticos produccion de cerveza") +xlab("años")+ 
+ ylab("miles de litros") +guides(colour=guide_legend(title="pronosticos"))  
+help("ausbeer")
+### grafica 2
+autolayer(meanf(cerveza2,h=11),series="media",PI=FALSE)+
+ autolayer(naive(cerveza2,h=11),series = "ingenuo",PI=FALSE)+
+ autolayer(rwf(cerveza2,h=11),series = "ingenuo estacional",PI=FALSE)+ 
+ ggtitle("pronosticos produccion de cerveza") +xlab("años")+ 
+ ylab("miles de litros") +guides(colour=guide_legend(title="pronosticos"))  
