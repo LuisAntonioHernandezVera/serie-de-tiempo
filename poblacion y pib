@@ -1,0 +1,60 @@
+#####POBLACIÓN EN MÉXICo
+
+pobbase<- read.csv("C://Users//ALUMNO-D2//Desktop//Documents//poblacion.csv") 
+pobla<- ts(pobbase$Poblacion.total,start = 1960, frequency = 1) 
+
+# PRONOSTICO Y PLOT 
+Pros<- rwf(pobla,h=50, drift = TRUE) 
+autoplot(Pros) 
+# observamos una tendencia a la alza y sin estacionalidad ni ciclos en la gràfica. 
+
+# GRAFICA DE RESDUALES, HISTOGRAMA Y AUTOCORRELACIÓN 
+res<- residuals(Pros) 
+autoplot(res) 
+# Se nota que a inicios de los 90's se tiene un residual muy grande lo que nos indica que la población en este periodo tuvo un cambio importante 
+
+gghistogram(res) 
+# No existe normalidad en la distribución de los residuales 
+
+ggAcf(res) 
+
+·Se observa que los residuos exceden la línea azul lo que nos indica que existe autocorrelaciòn 
+###### CRECIMIENTO ANUAL DEL PIB EN MÉXICO######### 
+
+pibbas<- read.csv("C://Users//ALUMNO-D2//Desktop// Documents //PIB.csv") 
+pib<- ts(pibbas,start = 1961, frequency = 1) 
+plot(pib) 
+# 1) PRONOSTICO Y PLOT 
+
+PROPIB<- rwf(pib,h=50, drift = TRUE) 
+autoplot(PROPIB) 
+# Existe estacionalidad muy alta con pocos ciclos 
+
+# 2)GRAFICA DE RESDUALES, HISTOGRAMA Y AUTOCORRELACIÓN 
+rpib<- residuals(PROPIB) 
+autoplot(rpib) 
+# Se observa que a inicios de los 90's se tiene un residual grande por lo que la población tuvo un 
+# cambio drástico 
+
+gghistogram(res) 
+# No hay una normalidad en la distribución de los resuduales 
+
+ggAcf(res) 
+# se observa que los puntos exceden línea azul, se asume que existe autocorrelación entre los 
+# datos del resultado obtenido anteriormente 
+pron<- naive(goog200) 
+names(pron) 
+res1<- residuals(naive(goog200)) 
+res1 
+
+# PLOT PRONOSTICO 
+autoplot(goog200) 
+autoplot(res1) 
+
+# HITOGRAMA 
+gghistogram(res1) + ggtitle("Histograma de residuales") 
+shapiro.test(res1) 
+
+# Prueba de correlación 
+ggAcf(res1) 
+# Pasa la linea azul, por lo tanto podemos concluir que tiene autocorrelación 
