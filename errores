@@ -1,0 +1,22 @@
+##### clase viernes 1-3-19
+require(forecast)
+require(ggplot2)
+require(fpp2)
+ beer2<-window(ausbeer,start=1992, end=c(2017,4))
+ beerfit1<- meanf(beer2,h=10)
+ beerfit2<- rwf(beer2,h=10)
+ beerfit3<- snaive(beer2,h=10)
+  autoplot(window(ausbeer, start=1992))+
+   autolayer(beerfit1, series="media",PI=FALSE)+
+   autolayer(beerfit2, series="ingenuo",PI=FALSE)+
+   autolayer(beerfit3, series="ingenuo estacional",PI=FALSE)+
+  xlab("años")+ylab("litros")+
+  ggtitle("pronostico")+
+  guides(colour=guide_legend(title="pronosticos"))
+  ####la grafica tres metodos de pronosticos aplicados A la produccion de cerveza 
+  ###australiana trimestral utilizando datos hasta finales de 2007
+  ###tambien se muestra los valores reales para el periodo 2008-2010
+beer3<- window(ausbeer, start=2008)
+accuracy(beerfit1,beer3)### da los errores del pronostico de la media 
+accuracy(beerfit2,beer3)
+accuracy(beerfit3,beer3)
