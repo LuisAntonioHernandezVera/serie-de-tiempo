@@ -1,0 +1,59 @@
+### clase 4-3-19
+require(forecast)
+require(fpp2)
+require(ggplot2)
+tvazteca<- read.csv("C://Users//Luis//Documents//actuaria 8tavo semestre//tv-azteca.csv")
+apple<- read.csv("C:/Users//Luis//Documents//actuaria 8tavo semestre//apple.csv")
+netflix<- read.csv("C://Users//Luis//Documents//actuaria 8tavo semestre//netflix.csv")
+##### series de timpo
+base1<- ts(tvazteca,start = 2017, end = 2019,frequency = 250)
+base2<- ts(apple, start = 2017, end= 2019,frequency = 250)
+base3<- ts(netflix, start = 2017, end = 2019, frequency = 250)
+#### descomposicion
+t<- decompose(base1)
+a<- decompose(base2)
+n<- decompose(base3)
+#### plots
+autoplot(t)
+autoplot(a)
+autoplot(n)
+#### cortes
+corte1<-window(base1,start=2017, end= c(2018,150))
+corte2<-window(base2,start=2017, end= c(2018,150))
+corte3<-window(base3,start=2017, end= c(2018,150))
+cortes1<-window(base1,start=c(2018,151), end= 2019)
+cortes2<-window(base2,start=c(2018,151), end= 2019)
+cortes3<-window(base3,start=c(2018,151), end= 2019)
+### pronosticos para los 3 con snaive
+### modelos
+m1<-snaive(corte1,h=150)
+m2<-snaive(corte2,h=150)
+m3<-snaive(corte3,h=150)
+### errores
+e1<-accuracy(m1,cortes1)
+e2<-accuracy(m2,cortes2)
+e3<-accuracy(m3,cortes3)
+### suavizado
+sua1<-ses(cortes1,alpha = 0.8,initial = "simple",h=150)
+sua2<-ses(cortes2,alpha = 0.8,initial = "simple",h=150)
+sua3<-ses(cortes3,alpha = 0.8,initial = "simple",h=150)
+### errores ses
+ses1<-accuracy(sua1,cortes1)
+ses2<-accuracy(sua2,cortes2)
+ses3<-accuracy(sua3,cortes3)
+### graficar
+autoplot(m1)+ggtitle("TV Azteca")+xlab("Periodo")+ylab("TV")+
+  theme(panel.background = element_blank(),panel.grid.major = element_line(colour = "red"))
+autoplot(m2)+ggtitle("Appel")+xlab("Periodo")+ylab("Appel")+
+  theme(panel.background = element_blank(),panel.grid.major = element_line(colour = "red"))
+autoplot(m3)+ggtitle("Netflix")+xlab("Periodo")+ylab("Netflix")+
+  theme(panel.background = element_blank(),panel.grid.major = element_line(colour = "red"))
+#### graficar ses
+autoplot(base1)+ggtitle("TV Azteca")+autolayer(sua1$fitted)+xlab("Periodo")+ylab("SES TV Azteca")+
+  theme(panel.background = element_blank(),panel.grid.major = element_line(colour = "red"))
+autoplot(base2)+ggtitle("Appel")++autolayer(sua2$fitted)+xlab("Periodo")+ylab("SES Appel")+
+  theme(panel.background = element_blank(),panel.grid.major = element_line(colour = "red"))
+autoplot(base3)+ggtitle("Netflix")++autolayer(sua3$fitted)+xlab("Periodo")+ylab("SES Netflix")+
+  theme(panel.background = element_blank(),panel.grid.major = element_line(colour = "red"))
+
+
